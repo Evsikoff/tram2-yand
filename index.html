@@ -16,6 +16,9 @@
 
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,700" rel="stylesheet">
 
+    <!-- Yandex Games SDK -->
+    <script src="/sdk.js"></script>
+
     <link rel="apple-touch-icon" sizes="57x57" href="ico/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="ico/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="ico/apple-icon-72x72.png">
@@ -476,6 +479,51 @@
     </div>
     <script src="static/bundle20201224.js" type="text/javascript"></script>
     <script type="text/javascript">
+        let ysdkInstancePromise;
+
+        function getYsdkInstance() {
+            if (!ysdkInstancePromise) {
+                ysdkInstancePromise = YaGames.init();
+            }
+            return ysdkInstancePromise;
+        }
+
+        async function callLoadingReady() {
+            try {
+                const ysdk = await getYsdkInstance();
+                if (ysdk?.features?.LoadingAPI?.ready) {
+                    ysdk.features.LoadingAPI.ready();
+                    console.log('Called ysdk.features.LoadingAPI.ready()');
+                }
+            } catch (error) {
+                console.error('Failed to call ysdk.features.LoadingAPI.ready()', error);
+            }
+        }
+
+        async function callGameplayStart() {
+            try {
+                const ysdk = await getYsdkInstance();
+                if (ysdk?.features?.GameplayAPI?.start) {
+                    ysdk.features.GameplayAPI.start();
+                    console.log('Called ysdk.features.GameplayAPI.start()');
+                }
+            } catch (error) {
+                console.error('Failed to call ysdk.features.GameplayAPI.start()', error);
+            }
+        }
+
+        async function callGameplayStop() {
+            try {
+                const ysdk = await getYsdkInstance();
+                if (ysdk?.features?.GameplayAPI?.stop) {
+                    ysdk.features.GameplayAPI.stop();
+                    console.log('Called ysdk.features.GameplayAPI.stop()');
+                }
+            } catch (error) {
+                console.error('Failed to call ysdk.features.GameplayAPI.stop()', error);
+            }
+        }
+
         function webAudioCtxRusume() {
             Howler.ctx.resume().then(() => {
                 console.log('Playback resumed successfully');
@@ -500,8 +548,10 @@
             webAudioCtxRusume();
             hideSoundDialog();
         });
-        document.querySelector('#continue').addEventListener('click', function() {
+        document.querySelector('#continue').addEventListener('click', async function() {
             hideSteamOverlay();
+            await callLoadingReady();
+            await callGameplayStart();
         })
         // Inline mute controls
         var muteOn = document.querySelector("#enable-audio");
@@ -517,6 +567,30 @@
             Howler.mute(false);
             muteOn.classList.add(className);
             muteOff.classList.remove(className);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var creditsButton = document.querySelector('#credits-button');
+            var creditsOverlay = document.querySelector('#credits');
+
+            if (creditsButton && creditsOverlay) {
+                creditsButton.addEventListener('click', function () {
+                    var wasVisible = window.getComputedStyle(creditsOverlay).display !== 'none';
+                    if (wasVisible) {
+                        callGameplayStart();
+                    } else {
+                        callGameplayStop();
+                    }
+                });
+            }
+
+            if (creditsOverlay) {
+                creditsOverlay.addEventListener('click', function (event) {
+                    if (event.target.id === 'credits') {
+                        callGameplayStart();
+                    }
+                });
+            }
         });
     </script>
 </body>
