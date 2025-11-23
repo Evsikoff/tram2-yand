@@ -488,7 +488,13 @@
             return ysdkInstancePromise;
         }
 
+        let loadingReadyTriggered = false;
+
         async function callLoadingReady() {
+            if (loadingReadyTriggered) {
+                return;
+            }
+            loadingReadyTriggered = true;
             try {
                 const ysdk = await getYsdkInstance();
                 if (ysdk?.features?.LoadingAPI?.ready) {
@@ -548,11 +554,50 @@
             webAudioCtxRusume();
             hideSoundDialog();
         });
+        const continueButton = document.querySelector('#continue');
+        const loaderElement = document.querySelector('#loader');
+
         document.querySelector('#continue').addEventListener('click', async function() {
             hideSteamOverlay();
             await callLoadingReady();
             await callGameplayStart();
         })
+
+        function isContinueButtonVisible() {
+            return continueButton && continueButton.offsetParent !== null;
+        }
+
+        function isLoaderHidden() {
+            return loaderElement && window.getComputedStyle(loaderElement).display === 'none';
+        }
+
+        function triggerLoadingReadyWhenAvailable() {
+            if (isContinueButtonVisible() && isLoaderHidden()) {
+                callLoadingReady();
+                return true;
+            }
+            return false;
+        }
+
+        function observeButtonAvailability() {
+            if (triggerLoadingReadyWhenAvailable()) {
+                return;
+            }
+
+            const observer = new MutationObserver(() => {
+                if (triggerLoadingReadyWhenAvailable()) {
+                    observer.disconnect();
+                }
+            });
+
+            if (loaderElement) {
+                observer.observe(loaderElement, { attributes: true, attributeFilter: ['style', 'class'] });
+            }
+
+            if (continueButton) {
+                observer.observe(continueButton, { attributes: true, attributeFilter: ['style', 'class'] });
+            }
+        }
         // Inline mute controls
         var muteOn = document.querySelector("#enable-audio");
         var muteOff = document.querySelector("#disable-audio");
@@ -591,6 +636,8 @@
                     }
                 });
             }
+
+            observeButtonAvailability();
         });
     </script>
 </body>
