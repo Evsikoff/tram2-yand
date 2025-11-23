@@ -115,26 +115,42 @@
             background-color: rgba(255, 255, 255, 0.85);
             top: 0px;
             left: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         #steam-overlay>#label {
-            margin: auto;
-            margin-top: 128px;
-            padding: 8px;
-            max-width: 512px;
+            padding: 16px;
         }
 
         #steam-overlay>#label>#continue {
-            background-color: white;
-            background-color: rgba(255, 255, 255, 0.85);
-            border-radius: 4px;
-            max-width: 200px;
+            background: linear-gradient(135deg, #f5e9d7, #e8d0a8);
+            color: #2f2414;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 999px;
+            min-width: 220px;
             margin: auto;
-            display: block;
-            border: 1px solid #cecece;
+            display: inline-block;
+            padding: 14px 28px;
+            border: 1px solid #d2b589;
             text-align: center;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.25);
             cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        #steam-overlay>#label>#continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 10px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        #steam-overlay>#label>#continue:active {
+            transform: translateY(0px);
+            box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.25);
         }
     </style>
 
@@ -445,12 +461,7 @@
     </div>
     <div id="steam-overlay">
         <div id="label">
-            <p><b>A Short Announcement</b></p>
-            <p>You can buy Short Trip to own on Steam from December 11th. This standalone version includes a new 'scheduled' mode, plus some extra bonus features. Thanks for your support!</p>
-            <iframe src="https://store.steampowered.com/widget/3187700/" frameborder="0" width="512" height="190" style="max-width:100%" "></iframe>
-            <div id="continue">
-                <p>Play Web Version</p>
-            </div>
+            <button id="continue">Начать путешествие</button>
         </div>
     </div>
     <div id="loader">
