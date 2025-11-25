@@ -494,8 +494,8 @@
         async function checkLanguage() {
             try {
                 const ysdk = await getYsdkInstance();
-                if (ysdk?.environment?.lang) {
-                    const lang = ysdk.environment.lang;
+                if (ysdk?.environment?.i18n?.lang) {
+                    const lang = ysdk.environment.i18n.lang;
                     console.log('Game language:', lang);
                     if (lang === 'ru') {
                         console.log('Game is running in Russian');
