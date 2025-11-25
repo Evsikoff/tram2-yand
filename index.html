@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 
 <head>
     <title>Поэма о трамвае</title>
     <meta charset="utf-8">
+    <meta http-equiv="content-language" content="ru">
+    <meta name="language" content="Russian">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
     <meta property="og:url" content="paper/shorttrip" />
@@ -488,6 +490,27 @@
             return ysdkInstancePromise;
         }
 
+        // Check language on initialization
+        async function checkLanguage() {
+            try {
+                const ysdk = await getYsdkInstance();
+                if (ysdk?.environment?.lang) {
+                    const lang = ysdk.environment.lang;
+                    console.log('Game language:', lang);
+                    if (lang === 'ru') {
+                        console.log('Game is running in Russian');
+                    } else {
+                        console.warn('Game language is not Russian:', lang);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to check language', error);
+            }
+        }
+
+        // Call language check on initialization
+        checkLanguage();
+
         let loadingReadyTriggered = false;
 
         async function callLoadingReady() {
@@ -612,6 +635,29 @@
             Howler.mute(false);
             muteOn.classList.add(className);
             muteOff.classList.remove(className);
+        });
+
+        // Handle audio pause/resume on tab visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Tab is hidden - pause audio
+                if (Howler && Howler.ctx && Howler.ctx.state === 'running') {
+                    Howler.ctx.suspend();
+                    console.log('Audio suspended - tab hidden');
+                }
+            } else {
+                // Tab is visible - resume audio if it was playing
+                if (Howler && Howler.ctx && Howler.ctx.state === 'suspended' && !Howler._muted) {
+                    Howler.ctx.resume();
+                    console.log('Audio resumed - tab visible');
+                }
+            }
+        });
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
         });
 
         document.addEventListener('DOMContentLoaded', function () {
