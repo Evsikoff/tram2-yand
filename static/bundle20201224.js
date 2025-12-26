@@ -119,12 +119,12 @@
             b = void 0,
             T = void 0;
         b = "static/img/", T = "static/sounds/";
-        var et = 0,
-            tt = 50,
-            it = void 0,
-            nt = function() {
-                it && (et >= tt ? it.text("Вы победили") : it.text("Перевезено пассажиров " + et + " из " + tt))
-            };
+        window._passengerCount = 0;
+        window._passengerGoal = 50;
+        window._passengerCounterEl = void 0;
+        window._updatePassengerCounter = function() {
+            window._passengerCounterEl && (window._passengerCount >= window._passengerGoal ? window._passengerCounterEl.text("Вы победили") : window._passengerCounterEl.text("Перевезено пассажиров " + window._passengerCount + " из " + window._passengerGoal))
+        };
         var S = void 0,
             U = void 0,
             A = void 0,
@@ -564,7 +564,7 @@
             };
         (0, h.default)(document).ready(function() {
             if (o.default.webgl && o.default.canvas) {
-                ee = (0, h.default)("#loading-percent"), L = (0, h.default)("#loading-message"), L.text("мир"), it = (0, h.default)("#passenger-counter"), nt();
+                ee = (0, h.default)("#loading-percent"), L = (0, h.default)("#loading-message"), L.text("мир"), window._passengerCounterEl = (0, h.default)("#passenger-counter"), window._updatePassengerCounter();
                 var e = (0, h.default)("#eco-button"),
                     t = (0, h.default)("#default-button");
                 (0, h.default)("#credits-button").on("click", function() {
@@ -15727,7 +15727,7 @@
             }, {
                 key: "onPassengerBoarded",
                 value: function(e) {
-                    et < tt && (et += 1), nt();
+                    window._passengerCount < window._passengerGoal && (window._passengerCount += 1), window._updatePassengerCounter();
                     e.stationFrom.removePassenger(e), this.app.singletons.tram.addPassenger(e), 0 === e.stationFrom.getPassengersForBoarding().length && (this.boardingPassengers = [], this.app.singletons.tram.closeDoors(null))
                 }
             }, {
