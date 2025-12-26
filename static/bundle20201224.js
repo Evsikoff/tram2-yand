@@ -120,7 +120,7 @@
             T = void 0;
         b = "static/img/", T = "static/sounds/";
         window._passengerCount = 0;
-        window._passengerGoal = 50;
+        window._passengerGoal = 100;
         window._passengerCounterEl = void 0;
         window._updatePassengerCounter = function() {
             window._passengerCounterEl && (window._passengerCount >= window._passengerGoal ? window._passengerCounterEl.text("Вы победили") : window._passengerCounterEl.text("Перевезено пассажиров " + window._passengerCount + " из " + window._passengerGoal))
