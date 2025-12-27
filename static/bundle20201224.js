@@ -566,7 +566,8 @@
                 }), window.addEventListener("mousewheel", function(e) {
                     e.preventDefault()
                 }), he.render(ue, pe), setTimeout(function() {
-                    (0, h.default)("#loader").fadeOut("slow")
+                    (0, h.default)("#loader").fadeOut("slow");
+                    (0, h.default)("#passenger-counter").fadeIn("slow")
                 }, 1e3), setInterval(function() {
                     document.webkitHidden || window.requestAnimationFrame(be)
                 }, 1e3 / 30)
