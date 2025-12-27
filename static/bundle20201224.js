@@ -122,8 +122,17 @@
         window._passengerCount = 0;
         window._passengerGoal = 100;
         window._passengerCounterEl = void 0;
+        window._victoryShown = false;
         window._updatePassengerCounter = function() {
-            window._passengerCounterEl && (window._passengerCount >= window._passengerGoal ? window._passengerCounterEl.text("Вы победили") : window._passengerCounterEl.text("Перевезено пассажиров " + window._passengerCount + " из " + window._passengerGoal))
+            if (window._passengerCounterEl) {
+                if (window._passengerCount >= window._passengerGoal && !window._victoryShown) {
+                    window._victoryShown = true;
+                    window._passengerCounterEl.text("Перевезено пассажиров " + window._passengerGoal + " из " + window._passengerGoal);
+                    document.getElementById("victory-overlay").style.display = "flex";
+                } else if (!window._victoryShown) {
+                    window._passengerCounterEl.text("Перевезено пассажиров " + window._passengerCount + " из " + window._passengerGoal);
+                }
+            }
         };
         var S = void 0,
             U = void 0,
